@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_default_state_manager/bloc_pattern/bmi_bloc_pattern.dart';
-import 'package:flutter_default_state_manager/change_notifier/bmi_change_notifier.dart';
 
+import 'bloc_pattern/bmi_bloc_pattern_page.dart';
+import 'change_notifier/bmi_change_notifier_page.dart';
 import 'setState/bmi_set_state.dart';
-import 'value_notifier/bmi_value_notifier.dart';
+import 'value_notifier/bmi_value_notifier_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,25 +28,25 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                _goToPage(context, const BmiSetState());
+                _goToPage(context, const BmiSetStatePage());
               },
               child: const Text('SetState'),
             ),
             ElevatedButton(
               onPressed: () {
-                _goToPage(context, const BmiValueNotifier());
+                _goToPage(context, const BmiValueNotifierPage());
               },
               child: const Text('ValueNotifier'),
             ),
             ElevatedButton(
               onPressed: () {
-                _goToPage(context, const BmiChangeNotifier());
+                _goToPage(context, const BmiChangeNotifierPage());
               },
               child: const Text('Change Notifier'),
             ),
             ElevatedButton(
               onPressed: () {
-                _goToPage(context, const BmiBlocPattern());
+                _goToPage(context, const BmiBlocPatternPage());
               },
               child: const Text('Bloc Pattern'),
             )

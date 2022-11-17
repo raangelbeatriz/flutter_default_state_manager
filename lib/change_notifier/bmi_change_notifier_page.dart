@@ -2,28 +2,24 @@ import 'dart:math';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_default_state_manager/change_notifier/bmi_change_notifier_controller.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/bmi_gauge.dart';
 
-class BmiValueNotifier extends StatefulWidget {
-  const BmiValueNotifier({Key? key}) : super(key: key);
+class BmiChangeNotifierPage extends StatefulWidget {
+  const BmiChangeNotifierPage({Key? key}) : super(key: key);
 
   @override
-  State<BmiValueNotifier> createState() => _BmiValueNotifierState();
+  State<BmiChangeNotifierPage> createState() => _BmiChangeNotifierPageState();
 }
 
-class _BmiValueNotifierState extends State<BmiValueNotifier> {
+class _BmiChangeNotifierPageState extends State<BmiChangeNotifierPage> {
   final weightController = TextEditingController();
   final heightController = TextEditingController();
-  var bmiResult = ValueNotifier(0.0);
+  var bmiResult = 0.0;
   final _formKey = GlobalKey<FormState>();
-
-  void _calculateBmi({required double weight, required double height}) async {
-    bmiResult.value = 0.0;
-    await Future.delayed(const Duration(seconds: 1));
-    bmiResult.value = weight / pow(height, 2);
-  }
+  final controller = BmiChangeNotifierController();
 
   @override
   void dispose() {
@@ -38,7 +34,7 @@ class _BmiValueNotifierState extends State<BmiValueNotifier> {
     print('Build tela completa');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BMI Value Notifier'),
+        title: const Text('BMI ChangeNotifier'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -47,12 +43,11 @@ class _BmiValueNotifierState extends State<BmiValueNotifier> {
             key: _formKey,
             child: Column(
               children: [
-                ValueListenableBuilder<double>(
-                    valueListenable: bmiResult,
-                    builder: (__, bmiResultValue, _) {
-                      print('----------------------------------------');
-                      print('Build tela ValueListenable');
-                      return BmiGauge(bmiResult: bmiResultValue);
+                AnimatedBuilder(
+                    animation: controller,
+                    builder: (context, child) {
+                      print('Build animated bmiResult');
+                      return BmiGauge(bmiResult: controller.bmiResult);
                     }),
                 const SizedBox(
                   height: 20,
@@ -106,11 +101,11 @@ class _BmiValueNotifierState extends State<BmiValueNotifier> {
                           formatter.parse(weightController.text) as double;
                       double height =
                           formatter.parse(heightController.text) as double;
-                      _calculateBmi(weight: weight, height: height);
+                      controller.calculateBmi(weight: weight, height: height);
                     }
                   },
                   child: const Text('Calculate BMI'),
-                )
+                ),
               ],
             ),
           ),

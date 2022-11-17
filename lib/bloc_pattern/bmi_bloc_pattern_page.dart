@@ -6,14 +6,14 @@ import 'package:intl/intl.dart';
 
 import '../widgets/bmi_gauge.dart';
 
-class BmiBlocPattern extends StatefulWidget {
-  const BmiBlocPattern({Key? key}) : super(key: key);
+class BmiBlocPatternPage extends StatefulWidget {
+  const BmiBlocPatternPage({Key? key}) : super(key: key);
 
   @override
-  State<BmiBlocPattern> createState() => _BmiBlocPatternState();
+  State<BmiBlocPatternPage> createState() => _BmiBlocPatternPageState();
 }
 
-class _BmiBlocPatternState extends State<BmiBlocPattern> {
+class _BmiBlocPatternPageState extends State<BmiBlocPatternPage> {
   final controller = BmiBlocPatternController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
