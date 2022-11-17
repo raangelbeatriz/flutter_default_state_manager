@@ -1,40 +1,38 @@
-import 'dart:math';
-
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_default_state_manager/change_notifier/bmi_change_notifier_controller.dart';
+import 'package:flutter_default_state_manager/bloc_pattern/bmi_bloc_pattern_controller.dart';
+import 'package:flutter_default_state_manager/bloc_pattern/bmi_state.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/bmi_gauge.dart';
 
-class BmiChangeNotifier extends StatefulWidget {
-  const BmiChangeNotifier({Key? key}) : super(key: key);
+class BmiBlocPattern extends StatefulWidget {
+  const BmiBlocPattern({Key? key}) : super(key: key);
 
   @override
-  State<BmiChangeNotifier> createState() => _BmiChangeNotifierState();
+  State<BmiBlocPattern> createState() => _BmiBlocPatternState();
 }
 
-class _BmiChangeNotifierState extends State<BmiChangeNotifier> {
+class _BmiBlocPatternState extends State<BmiBlocPattern> {
+  final controller = BmiBlocPatternController();
   final weightController = TextEditingController();
   final heightController = TextEditingController();
   var bmiResult = 0.0;
   final _formKey = GlobalKey<FormState>();
-  final controller = BmiChangeNotifierController();
 
   @override
   void dispose() {
     weightController.dispose();
     heightController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('----------------------------------------');
-    print('Build tela completa');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BMI ChangeNotifier'),
+        title: const Text('BMI Bloc Pattern'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -43,15 +41,32 @@ class _BmiChangeNotifierState extends State<BmiChangeNotifier> {
             key: _formKey,
             child: Column(
               children: [
-                AnimatedBuilder(
-                    animation: controller,
-                    builder: (context, child) {
-                      print('Build animated bmiResult');
-                      return BmiGauge(bmiResult: controller.bmiResult);
-                    }),
+                StreamBuilder<BmiState>(
+                  stream: controller.bmiOut,
+                  builder: ((context, snapshot) {
+                    var bmiResult = snapshot.data?.bmiResult ?? 0.0;
+                    return BmiGauge(bmiResult: bmiResult);
+                  }),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
+                StreamBuilder(
+                    stream: controller.bmiOut,
+                    builder: (context, snapshot) {
+                      var dataValue = snapshot.data;
+                      if (dataValue is BmiStateLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (dataValue is BmiStateError) {
+                        return Center(
+                          child: Text(dataValue.message),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
                 TextFormField(
                   controller: weightController,
                   keyboardType: TextInputType.number,
@@ -105,7 +120,7 @@ class _BmiChangeNotifierState extends State<BmiChangeNotifier> {
                     }
                   },
                   child: const Text('Calculate BMI'),
-                ),
+                )
               ],
             ),
           ),

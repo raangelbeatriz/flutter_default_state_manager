@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_default_state_manager/bloc_pattern/bmi_bloc_pattern.dart';
 import 'package:flutter_default_state_manager/change_notifier/bmi_change_notifier.dart';
 
 import 'setState/bmi_set_state.dart';
@@ -44,7 +45,9 @@ class HomePage extends StatelessWidget {
               child: const Text('Change Notifier'),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _goToPage(context, const BmiBlocPattern());
+              },
               child: const Text('Bloc Pattern'),
             )
           ],
