@@ -1,5 +1,3 @@
-import 'package:flutter_default_state_manager/setState/bmi_set_state.dart';
-
 class BmiState {
   final double? bmiResult;
 
